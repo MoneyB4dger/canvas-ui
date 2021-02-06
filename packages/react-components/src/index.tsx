@@ -1,4 +1,4 @@
-// Copyright 2017-2020 @canvas-ui/react-components authors & contributors
+// Copyright 2017-2021 @canvas-ui/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 export { default as Abi } from './Abi';
@@ -63,6 +63,7 @@ export { default as Output } from './Output';
 export { default as Password } from './Password';
 export { default as PendingTx } from './PendingTx';
 export { default as Progress } from './Progress';
+export { default as ResetStorageModal } from './ResetStorageModal';
 export { default as ScrollToTop } from './ScrollToTop';
 export { default as Spinner } from './Spinner';
 export { default as Static } from './Static';

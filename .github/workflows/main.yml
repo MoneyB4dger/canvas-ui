@@ -12,9 +12,10 @@ jobs:
     name: ${{ matrix.step }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GH_PAT }}
+          ref: ${{ github.head_ref }}
       - name: ${{ matrix.step }}
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
