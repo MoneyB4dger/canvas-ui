@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { HeaderExtended } from '@polkadot/api-derive';
 import { useApi, useCall } from '@canvas-ui/react-hooks';
 import { formatNumber } from '@polkadot/util';
-import keyring from "@polkadot/ui-keyring";
+import CodeResetUI from "@canvas-ui/react-components/CodeResetUI";
 
 export interface Authors {
   byAuthor: Record<string, string>;
@@ -33,6 +33,7 @@ function BlockAuthorsBase ({ children }: Props): React.ReactElement<Props> {
   const { api, isApiReady } = useApi();
   const queryPoints = useCall<EraRewardPoints>(isApiReady && api.derive.staking?.currentPoints, []);
   const [state, setState] = useState<Authors>({ byAuthor, eraPoints, lastBlockAuthors: [], lastHeaders: [] });
+  const [resetUIModalOpen, setResetUIModalOpen] = useState<boolean>(false);
   const [validators, setValidators] = useState<string[]>([]);
 
   useEffect((): void => {
@@ -61,16 +62,7 @@ function BlockAuthorsBase ({ children }: Props): React.ReactElement<Props> {
             chainName === 'Development' &&
             (parseInt(window.localStorage.getItem('currentBlockIndex') || '0') > currentBlockIndex)
           ) {
-            const resetConfirm = confirm('It seems your currently running chain and the UI artifacts are out of sync.\n' +
-              '\n' +
-              'This can happen after purging a chain or switching the chain to another.\n' +
-              'If this is the case please click [OK] in order to reset your UI.')
-            if (resetConfirm) {
-              const existingContractList = keyring.getContracts()
-              existingContractList.forEach(existingContract => {
-                keyring.forgetContract(existingContract.address.toString());
-              })
-            }
+            setResetUIModalOpen(true)
           }
           window.localStorage.setItem('currentBlockIndex', currentBlockIndex);
 
@@ -124,6 +116,9 @@ function BlockAuthorsBase ({ children }: Props): React.ReactElement<Props> {
     <ValidatorsContext.Provider value={validators}>
       <BlockAuthorsContext.Provider value={state}>
         {children}
+        {resetUIModalOpen && <CodeResetUI
+          closeModal={() => setResetUIModalOpen(false)}
+        />}
       </BlockAuthorsContext.Provider>
     </ValidatorsContext.Provider>
   );
